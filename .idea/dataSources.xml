@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="production/Hibernate" uuid="a3e7cc6f-3248-4e52-88c1-ff416482e2c4">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <imported>true</imported>
+      <remarks>$PROJECT_DIR$/src/main/java/META-INF/persistence.xml</remarks>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+    </data-source>
+    <data-source source="LOCAL" name="h2_test/Hibernate" uuid="e18e9635-8711-41db-9ca0-a1d08f265f3b">
+      <driver-ref>h2.unified</driver-ref>
+      <synchronize>true</synchronize>
+      <imported>true</imported>
+      <remarks>$PROJECT_DIR$/src/main/java/META-INF/persistence.xml</remarks>
+      <jdbc-driver>org.h2.Driver</jdbc-driver>
+    </data-source>
+    <data-source source="LOCAL" name="postgresql/Hibernate" uuid="05d7e03c-61fe-426d-bb4d-bf7ea6fecad1">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <imported>true</imported>
+      <remarks>$PROJECT_DIR$/src/main/java/META-INF/persistence.xml</remarks>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+    </data-source>
+    <data-source source="LOCAL" name="h2/Hibernate" uuid="eb7cc84c-28d6-42ab-9ae1-3f1b1aa5a145">
+      <driver-ref>h2.unified</driver-ref>
+      <synchronize>true</synchronize>
+      <imported>true</imported>
+      <remarks>$PROJECT_DIR$/src/main/java/META-INF/persistence.xml</remarks>
+      <jdbc-driver>org.h2.Driver</jdbc-driver>
+    </data-source>
+  </component>
+</project>
