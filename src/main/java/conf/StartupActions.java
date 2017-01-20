@@ -11,7 +11,7 @@ import dao.SetupDao;
 
 @Singleton
 public class StartupActions {
-    
+
     @Inject
     SetupDao setupDao;
 
@@ -21,16 +21,16 @@ public class StartupActions {
     public StartupActions(NinjaProperties ninjaProperties) {
         this.ninjaProperties = ninjaProperties;
     }
-    
-    @Start(order=100)
+
+    @Start(order = 100)
     public void generateDummyDataWhenInTest() {
-        
+
         if (!ninjaProperties.isProd()) {
-            
+
             setupDao.setup();
-            
+
         }
-        
+
     }
 
 }
