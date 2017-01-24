@@ -16,6 +16,7 @@
 
 package conf;
 
+import controllers.GameController;
 import ninja.AssetsController;
 import ninja.FilterWith;
 import ninja.Router;
@@ -63,7 +64,11 @@ public class Routes implements ApplicationRoutes {
         router.GET().route("/assets/webjars/{fileName: .*}").with(AssetsController.class, "serveWebJars");
         router.GET().route("/assets/{fileName: .*}").with(AssetsController.class, "serveStatic");
 
+        router.GET().route("/get-game").with(GameController.class, "game");
+
         router.GET().route("/.*").with(ApplicationController.class, "index");
+
+
     }
 
 }

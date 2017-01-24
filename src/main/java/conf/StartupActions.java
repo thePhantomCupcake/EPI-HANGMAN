@@ -1,21 +1,20 @@
 package conf;
 
 import javax.inject.Singleton;
+import javax.persistence.EntityManager;
 
 import ninja.lifecycle.Start;
 import ninja.utils.NinjaProperties;
 
 import com.google.inject.Inject;
 
-import dao.SetupDao;
 
-@Singleton
 public class StartupActions {
 
-    @Inject
-    SetupDao setupDao;
-
     private NinjaProperties ninjaProperties;
+
+    @Inject
+    private EntityManager entityManager;
 
     @Inject
     public StartupActions(NinjaProperties ninjaProperties) {
@@ -24,12 +23,6 @@ public class StartupActions {
 
     @Start(order = 100)
     public void generateDummyDataWhenInTest() {
-
-        if (!ninjaProperties.isProd()) {
-
-            setupDao.setup();
-
-        }
 
     }
 

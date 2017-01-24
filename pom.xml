@@ -179,10 +179,11 @@
             <version>9.4.1212.jre7</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.karaf.jpa</groupId>
-            <artifactId>hibernate</artifactId>
-            <version>4.0.8</version>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-c3p0</artifactId>
+            <version>5.2.6.Final</version>
         </dependency>
+
         <!-- If you want to deploy to a war please -->
         <!-- comment ninja-standalone dependency and  -->
         <!-- uncomment the dependency for ninja-servlet -->

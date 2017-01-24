@@ -25,7 +25,6 @@ public class AuthenticationController {
 
     public Result loginPost(@Param("username") String username,
                             @Param("password") String password,
-                            @Param("rememberMe") Boolean rememberMe,
                             Context context) {
 
         boolean isUserNameAndPasswordValid = authService.login(username, password);
@@ -33,10 +32,6 @@ public class AuthenticationController {
         if (isUserNameAndPasswordValid) {
             Session session = context.getSession();
             session.put("username", username);
-
-            if (rememberMe != null && rememberMe) {
-                session.setExpiryTime(24 * 60 * 60 * 1000L);
-            }
 
             context.getFlashScope().success("login.loginSuccessful");
 
@@ -46,7 +41,6 @@ public class AuthenticationController {
 
             // something is wrong with the input or password not found.
             context.getFlashScope().put("username", username);
-            context.getFlashScope().put("rememberMe", rememberMe);
             context.getFlashScope().error("login.errorLogin");
 
             return Results.redirect("/login");

@@ -6,20 +6,13 @@ import ninja.*;
 
 import com.google.inject.Inject;
 
-import dao.SetupDao;
-
 public class ApplicationController {
-
-    @Inject
-    SetupDao setupDao;
 
     public ApplicationController() {
 
     }
 
     public Result setup() {
-
-        setupDao.setup();
 
         return Results.ok();
 

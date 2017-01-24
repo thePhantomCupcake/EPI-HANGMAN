@@ -1,13 +1,15 @@
 package services;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.google.inject.persist.*;
 import com.google.inject.Provider;
-import models.User;
+import models.Profile;
 import ninja.jpa.UnitOfWork;
 
 import javax.persistence.EntityManager;
 import javax.persistence.FlushModeType;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -16,6 +18,7 @@ import java.security.NoSuchAlgorithmException;
 /**
  * Created by jodan on 2017/01/20.
  */
+@Singleton
 public class AuthenticationService {
     @Inject
     Provider<EntityManager> entityManagerProvider;
@@ -36,19 +39,18 @@ public class AuthenticationService {
 
             EntityManager entityManager = entityManagerProvider.get();
 
-            TypedQuery<User> q = entityManager.createQuery("SELECT x FROM User x WHERE username = :usernameParam", User.class);
-
-            User user;
+            Profile profile;
             try {
-                user = q.setParameter("usernameParam", username).getSingleResult();
+                TypedQuery<Profile> q = entityManager.createQuery("SELECT x FROM Profile x WHERE username = :usernameParam", Profile.class);
+                profile = q.setParameter("usernameParam", username).getSingleResult();
             }
             catch (Exception e){
-                user = null;
+                profile = null;
             }
 
-            if (user != null) {
-                System.out.println("Username: " + username + " || Input Hash: " + new String(encodedhash) + " || " + "Stored Hash: " + user.password);
-                if (user.password.equals(new String(encodedhash))) {
+            if (profile != null) {
+                System.out.println("Username: " + username + " || Input Hash: " + new String(encodedhash) + " || " + "Stored Hash: " + profile.password);
+                if (profile.password.equals(new String(encodedhash))) {
 
                     return true;
                 }
@@ -63,6 +65,8 @@ public class AuthenticationService {
 
     @Transactional
     public boolean register(String username, String password) {
+
+
         MessageDigest digest = null;
         try {
             digest = MessageDigest.getInstance("SHA-256");
@@ -74,19 +78,18 @@ public class AuthenticationService {
 
         EntityManager entityManager = entityManagerProvider.get();
 
-        TypedQuery<User> q = entityManager.createQuery("SELECT x FROM User x WHERE username = :usernameParam", User.class);
-
-        User user;
+        Profile profile;
         try {
-            user = q.setParameter("usernameParam", username).getSingleResult();
+            TypedQuery<Profile> q = entityManager.createQuery("SELECT x FROM Profile x WHERE username = :usernameParam", Profile.class);
+            profile = q.setParameter("usernameParam", username).getSingleResult();
         }
         catch (Exception e){
-            user = null;
+            profile = null;
         }
 
-        if (user == null) {
-            User newUser = new User(username, new String(encodedhash));
-            entityManager.persist(newUser);
+        if (profile == null) {
+            Profile newProfile = new Profile(username, new String(encodedhash));
+            entityManager.persist(newProfile);
 
             entityManager.setFlushMode(FlushModeType.COMMIT);
             entityManager.flush();
