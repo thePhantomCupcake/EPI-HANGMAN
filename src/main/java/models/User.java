@@ -13,8 +13,7 @@ public class User {
     public Long id;
     public String username;
     public String password;
-    public boolean isAdmin;
-    
+
     public User() {}
     
     public User(String username, String password) {

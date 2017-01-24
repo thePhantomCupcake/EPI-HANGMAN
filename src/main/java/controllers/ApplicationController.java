@@ -1,12 +1,9 @@
 
 package controllers;
 
-import java.util.List;
-import java.util.Map;
-
+import filters.MyFilter;
 import ninja.*;
 
-import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
 import dao.SetupDao;

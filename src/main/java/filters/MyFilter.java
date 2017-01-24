@@ -1,4 +1,4 @@
-package controllers;
+package filters;
 
 import com.google.inject.Inject;
 import ninja.*;

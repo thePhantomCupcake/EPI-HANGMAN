@@ -8,17 +8,14 @@ import ninja.session.Session;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import dao.UserDao;
-
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
+import services.AuthenticationService;
 
 @Singleton
 public class AuthenticationController {
 
     @Inject
-    UserDao userDao;
+    AuthenticationService authService;
+
 
     public Result login(Context context) {
 
@@ -31,7 +28,7 @@ public class AuthenticationController {
                             @Param("rememberMe") Boolean rememberMe,
                             Context context) {
 
-        boolean isUserNameAndPasswordValid = userDao.isUserAndPasswordValid(username, password);
+        boolean isUserNameAndPasswordValid = authService.login(username, password);
 
         if (isUserNameAndPasswordValid) {
             Session session = context.getSession();
@@ -68,7 +65,7 @@ public class AuthenticationController {
                                @Param("password") String password,
                                Context context) {
 
-        boolean isUserNew = userDao.addUser(username, password);
+        boolean isUserNew = authService.register(username, password);
 
         if (isUserNew) {
             Session session = context.getSession();
