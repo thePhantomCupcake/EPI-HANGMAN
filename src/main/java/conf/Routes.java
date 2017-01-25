@@ -51,6 +51,8 @@ public class Routes implements ApplicationRoutes {
             router.GET().route("/setup").with(ApplicationController.class, "setup");
         }
 
+        router.GET().route("/webjars/{fileName: .*}").with(AssetsController.class, "serveWebJars");
+
         // Authorization
         router.GET().route("/").with(ApplicationController.class, "index");
         router.GET().route("/login").with(AuthenticationController.class, "login");
@@ -65,6 +67,8 @@ public class Routes implements ApplicationRoutes {
         router.GET().route("/assets/{fileName: .*}").with(AssetsController.class, "serveStatic");
 
         router.GET().route("/get-game").with(GameController.class, "game");
+        router.POST().route("/save-game").with(GameController.class, "saveGame");
+        router.GET().route("/new-game").with(GameController.class, "newGame");
 
         router.GET().route("/.*").with(ApplicationController.class, "index");
 

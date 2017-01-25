@@ -15,7 +15,7 @@
 			<ul class="navbar-right nav navbar-nav">
 			<#if (session.username)??>
                 <li><a href="#">${session.username}</a></li>
-                <li><a href="/game">${i18n("header.new")}</a></li>
+				<li><a id="new-game" href="#">${i18n("header.new")}</a></li>
                 <li><a href="/logout">${i18n("header.logout")}</a></li>
             <#else>
                 

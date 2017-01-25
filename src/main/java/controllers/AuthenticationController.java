@@ -16,11 +16,8 @@ public class AuthenticationController {
     @Inject
     AuthenticationService authService;
 
-
     public Result login(Context context) {
-
         return Results.html();
-
     }
 
     public Result loginPost(@Param("username") String username,
@@ -36,15 +33,11 @@ public class AuthenticationController {
             context.getFlashScope().success("login.loginSuccessful");
 
             return Results.redirect("/");
-
         } else {
-
-            // something is wrong with the input or password not found.
             context.getFlashScope().put("username", username);
             context.getFlashScope().error("login.errorLogin");
 
             return Results.redirect("/login");
-
         }
 
     }
@@ -68,14 +61,12 @@ public class AuthenticationController {
             context.getFlashScope().success("login.loginSuccessful");
 
             return Results.redirect("/");
-
         } else {
 
             context.getFlashScope().put("username", username);
             context.getFlashScope().error("register.errorRegister");
 
             return Results.redirect("/register");
-
         }
 
     }

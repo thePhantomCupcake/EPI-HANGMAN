@@ -1,3 +1,5 @@
+<script src="/webjars/jquery/2.1.3/jquery.js"></script>
+
 <style>
     button {
         height: 50px;
@@ -10,42 +12,193 @@
     }
 </style>
 
+<script>
+    var gameState;
+    var tries = 0;
+    $(document).ready(function () {
+        hideHangman();
+
+        $("#correct").html("Loading...");
+        $.getJSON("/get-game", saveGameStateLocally);
+
+        $(".letter").click(function () {
+
+            gameState['guesses'] += $(this).html().toLowerCase();
+
+            saveGameToServer();
+        });
+    });
+
+    function hideHangman() {
+        $("#head").hide();
+        $("#body").hide();
+        $("#rightArm").hide();
+        $("#leftArm").hide();
+        $("#rightLeg").hide();
+        $("#leftLeg").hide();
+    }
+
+    function countTries() {
+        tries = 0;
+        for (i = 0; i < gameState['guesses'].length; i++) {
+            if (!gameState["word"].includes(gameState['guesses'][i])) {
+                tries += 1;
+            }
+        }
+    }
+
+    function updateGameView() {
+        countTries();
+        for (i = 0; i < gameState['guesses'].length; i++) {
+            $("#" + gameState['guesses'][i].toLocaleLowerCase()).prop("disabled", true);
+            $("#" + gameState['guesses'][i].toLocaleLowerCase()).css("color", "lightgrey");
+        }
+
+        switch (tries) {
+            case 1:
+                $("#head").show();
+                break;
+            case 2:
+                $("#head").show();
+                $("#body").show();
+                break;
+            case 3:
+                $("#head").show();
+                $("#body").show();
+                $("#rightArm").show();
+                break;
+            case 4:
+                $("#head").show();
+                $("#body").show();
+                $("#rightArm").show();
+                $("#leftArm").show();
+                break;
+            case 5:
+                $("#head").show();
+                $("#body").show();
+                $("#rightArm").show();
+                $("#leftArm").show();
+                $("#rightLeg").show();
+                break;
+            case 6:
+                $("#head").show();
+                $("#body").show();
+                $("#rightArm").show();
+                $("#leftArm").show();
+                $("#rightLeg").show();
+                $("#leftLeg").show();
+            default:
+        }
+
+        if (tries == 6) {
+            anotherGame = confirm("You've lost...\nNew game?");
+
+            if (anotherGame) {
+                newGame();
+            }
+        }
+
+        $("#correct").html("");
+
+        lettersCorrect = 0;
+        for (x = 0; x < gameState['word'].length; x++) {
+            if (gameState['guesses'].includes(gameState['word'][x])) {
+                $("#correct").html($("#correct").html() + gameState['word'][x] + " ");
+                lettersCorrect += 1;
+            }
+            else {
+                $("#correct").html($("#correct").html() + "_ ");
+            }
+        }
+
+        if (lettersCorrect == gameState['word'].length) {
+            anotherGame = confirm("Congratulations! You've won!\nNew game?");
+
+            if (anotherGame) {
+                newGame();
+            }
+        }
+    }
+
+    function saveGameToServer() {
+        $.post("/save-game", {
+            username: gameState["username"],
+            guesses: gameState["guesses"],
+            word: gameState["word"]
+        }, function (result) {
+            //alert("SAVED GAME: " + JSON.stringify(result));
+            updateGameView();
+        });
+    }
+
+    $("#new-game").click(function () {
+        newGame();
+    });
+
+    function newGame() {
+        $("#correct").html("Loading...");
+        tries = 0;
+        $.getJSON("/new-game", saveGameStateLocally);
+        hideHangman();
+        $(".letter").each(function () {
+            $(this).prop("disabled", false);
+            $(this).css("color", "black");
+        });
+    }
+
+    function saveGameStateLocally(data) {
+        gameState = data;
+        updateGameView();
+    }
+</script>
+
 <div style="height: 700px;" id="gameBody">
     <div style="float: left; position:relative;">
-        <img style="position: absolute;" height="600px" src="../../assets/images/rope.png"/>
-        <img style="position: absolute;" height="600px" src="../../assets/images/head.png"/>
+        <img id="rightLeg" style="position: absolute;" height="600px" src="../../assets/images/rightLeg.png"/>
+        <img id="leftLeg" style="position: absolute;" height="600px" src="../../assets/images/leftLeg.png"/>
+        <img id="rightArm" style="position: absolute;" height="600px" src="../../assets/images/rightArm.png"/>
+        <img id="leftArm" style="position: absolute;" height="600px" src="../../assets/images/leftArm.png"/>
+        <img id="body" style="position: absolute;" height="600px" src="../../assets/images/body.png"/>
+        <img id="rope" style="position: absolute;" height="600px" src="../../assets/images/rope.png"/>
+        <img id="head" style="position: absolute;" height="600px" src="../../assets/images/head.png"/>
     </div>
-    <div id="keypad" style="float: right;">
-        <button>A</button>
-        <button>B</button>
-        <button>C</button>
-        <button>D</button>
-        <button>E</button>
-        <button>F</button>
-        <br/>
-        <button>G</button>
-        <button>H</button>
-        <button>I</button>
-        <button>J</button>
-        <button>K</button>
-        <button>L</button>
-        <br/>
-        <button>M</button>
-        <button>N</button>
-        <button>O</button>
-        <button>P</button>
-        <button>Q</button>
-        <button>R</button>
-        <br/>
-        <button>S</button>
-        <button>T</button>
-        <button>U</button>
-        <button>V</button>
-        <button>W</button>
-        <button>X</button>
-        <br/>
-        <button>Y</button>
-        <button>Z</button>
-        <br/>
+    <div style="float: right;">
+        <div id="keypad">
+            <button class="letter" id="a">A</button>
+            <button class="letter" id="b">B</button>
+            <button class="letter" id="c">C</button>
+            <button class="letter" id="d">D</button>
+            <button class="letter" id="e">E</button>
+            <button class="letter" id="f">F</button>
+            <br/>
+            <button class="letter" id="g">G</button>
+            <button class="letter" id="h">H</button>
+            <button class="letter" id="i">I</button>
+            <button class="letter" id="j">J</button>
+            <button class="letter" id="k">K</button>
+            <button class="letter" id="l">L</button>
+            <br/>
+            <button class="letter" id="m">M</button>
+            <button class="letter" id="n">N</button>
+            <button class="letter" id="o">O</button>
+            <button class="letter" id="p">P</button>
+            <button class="letter" id="q">Q</button>
+            <button class="letter" id="r">R</button>
+            <br/>
+            <button class="letter" id="s">S</button>
+            <button class="letter" id="t">T</button>
+            <button class="letter" id="u">U</button>
+            <button class="letter" id="v">V</button>
+            <button class="letter" id="w">W</button>
+            <button class="letter" id="x">X</button>
+            <br/>
+            <button class="letter" id="y">Y</button>
+            <button class="letter" id="z">Z</button>
+            <br/>
+        </div>
+        <div style="padding-top: 30px;">
+            <h2>Word:</h2>
+            <h3 id="correct"></h3>
+        </div>
     </div>
 </div>
