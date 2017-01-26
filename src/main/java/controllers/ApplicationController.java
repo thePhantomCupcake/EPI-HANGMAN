@@ -19,7 +19,7 @@ public class ApplicationController {
     }
 
     @FilterWith(MyFilter.class)
-    public Result index() {
+    public static Result index() {
 
         return Results.html();
 

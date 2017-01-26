@@ -1,17 +1,11 @@
 package services;
 
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
-import com.google.inject.persist.Transactional;
+import dao.GameDao;
 import models.GameState;
-import models.Profile;
-import ninja.jpa.UnitOfWork;
-import javax.persistence.EntityManager;
-import javax.persistence.FlushModeType;
-import javax.persistence.TypedQuery;
+
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -23,86 +17,53 @@ import java.net.URL;
 @Singleton
 public class GameService {
     @Inject
-    Provider<EntityManager> entityManagerProvider;
+    private GameDao gameDao;
 
-    @UnitOfWork
     public GameState getGame(String username) {
 
         if (username != null) {
-
-            EntityManager entityManager = entityManagerProvider.get();
-
-            GameState state;
-            try {
-                TypedQuery<GameState> q = entityManager.createQuery("SELECT x FROM GameState x WHERE username = :usernameParam", GameState.class);
-                state = q.setParameter("usernameParam", username).getSingleResult();
-            } catch (Exception e) {
-                state = null;
-            }
+            GameState state = gameDao.getGameState(username);
 
             if (state == null) {
                 String url = "http://randomword.setgetgo.com/get.php";
                 StringBuffer response = getWord(url);
-                ;
 
                 state = new GameState(username, response.toString(), "");
+                gameDao.saveGame(state);
             }
-
             return state;
         }
-
         return null;
     }
 
-    @Transactional
     public void saveGame(GameState gameState) {
+        GameState state = gameDao.getGameState(gameState.username);
 
-        EntityManager entityManager = entityManagerProvider.get();
-
-        GameState state;
-        try {
-            TypedQuery<GameState> q = entityManager.createQuery("SELECT x FROM GameState x WHERE username = :usernameParam", GameState.class);
-            state = q.setParameter("usernameParam", gameState.username).getSingleResult();
-        } catch (Exception e) {
-            state = null;
-        }
-
-        if (state == null) {
-            entityManager.persist(gameState);
-
-            entityManager.setFlushMode(FlushModeType.COMMIT);
-            entityManager.flush();
-        } else {
+        if (state != null) {
             state.guesses = gameState.guesses;
             state.word = gameState.word;
         }
+
+        gameDao.saveGame(gameState);
     }
 
-    @Transactional
     public void newGame(String username) {
+        GameState state = gameDao.getGameState(username);
 
-        EntityManager entityManager = entityManagerProvider.get();
-
-        GameState state;
-        try {
-            TypedQuery<GameState> q = entityManager.createQuery("SELECT x FROM GameState x WHERE username = :usernameParam", GameState.class);
-            state = q.setParameter("usernameParam", username).getSingleResult();
-        } catch (Exception e) {
-            state = null;
-        }
+        String url = "http://randomword.setgetgo.com/get.php";
 
         if (state == null) {
-            String url = "http://randomword.setgetgo.com/get.php";
             StringBuffer response = getWord(url);
 
             state = new GameState(username, response.toString(), "");
         } else {
-            String url = "http://randomword.setgetgo.com/get.php";
             StringBuffer response = getWord(url);
 
             state.guesses = "";
             state.word = response.toString();
         }
+
+        gameDao.saveGame(state);
     }
 
     private StringBuffer getWord(String url) {
@@ -134,6 +95,4 @@ public class GameService {
 
         return response;
     }
-
-
 }
