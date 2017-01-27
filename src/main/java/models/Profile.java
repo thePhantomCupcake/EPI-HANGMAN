@@ -8,12 +8,13 @@ import javax.persistence.Id;
 @Entity
 public class Profile {
 
+    public String username;
+    public String password;
+    public String correctlyGuessed;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
-
-    public String username;
-    public String password;
 
     public Profile() {
     }

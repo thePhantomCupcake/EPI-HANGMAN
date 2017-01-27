@@ -2,7 +2,8 @@
 CREATE TABLE Profile (
   id       SERIAL PRIMARY KEY NOT NULL,
   username VARCHAR(256),
-  password VARCHAR(256)
+  password VARCHAR(256),
+  correctlyGuessed VARCHAR(3000)
 );
 
 CREATE TABLE GameState (

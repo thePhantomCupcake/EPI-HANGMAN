@@ -48,7 +48,6 @@ public class UserDao {
             TypedQuery<Profile> q = entityManager.createQuery("SELECT x FROM Profile x WHERE username = :usernameParam", Profile.class);
             profile = q.setParameter("usernameParam", newProfile.username).getSingleResult();
         } catch (Exception e) {
-            e.printStackTrace();
             profile = null;
         }
 
@@ -58,7 +57,35 @@ public class UserDao {
             entityManager.setFlushMode(FlushModeType.COMMIT);
             entityManager.flush();
             return true;
+        } else {
+            profile.correctlyGuessed = newProfile.correctlyGuessed;
         }
         return false;
     }
+
+    @Transactional
+    public boolean updateProfile(Profile editedProfile) {
+
+        EntityManager entityManager = entityManagerProvider.get();
+
+        Profile profile;
+        try {
+            TypedQuery<Profile> q = entityManager.createQuery("SELECT x FROM Profile x WHERE username = :usernameParam", Profile.class);
+            profile = q.setParameter("usernameParam", editedProfile.username).getSingleResult();
+        } catch (Exception e) {
+            profile = null;
+        }
+
+        if (profile != null) {
+            if (!editedProfile.correctlyGuessed.equals(""))
+                profile.correctlyGuessed = editedProfile.correctlyGuessed;
+
+            if (!editedProfile.password.equals(""))
+                profile.password = editedProfile.password;
+            return true;
+        }
+
+        return false;
+    }
+
 }

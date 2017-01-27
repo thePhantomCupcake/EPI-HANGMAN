@@ -1,5 +1,6 @@
 package controllers;
 
+import models.Profile;
 import ninja.Context;
 import ninja.Result;
 import ninja.Results;
@@ -77,5 +78,4 @@ public class AuthenticationController {
 
         return Results.html();
     }
-
 }
